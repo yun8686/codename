@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "183582132651",
+    "firebase_url": "https://word-association-8764f.firebaseio.com",
+    "project_id": "word-association-8764f",
+    "storage_bucket": "word-association-8764f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183582132651:android:5265760d1b4a26cec9eaee",
+        "android_client_info": {
+          "package_name": "codename.triplei.codename"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "183582132651-d6fp5176ocehga0md4kjf8uiveondbdh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "codename.triplei.codename",
+            "certificate_hash": "c5cff1077c90f009e4b77d7f9d6b484c816bd275"
+          }
+        },
+        {
+          "client_id": "183582132651-s3deoj0foj4v553tt693vampndg4q21e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN1YEs5Yb3TWqdUR5Tu-CRI5UTjHZqE_U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "183582132651-s3deoj0foj4v553tt693vampndg4q21e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
