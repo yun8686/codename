@@ -6,26 +6,32 @@ class GameHero{
     return Card(
       child: Column(
         children: <Widget>[
-          Text(
-            question.title,
-            style: TextStyle(fontSize: 40),
+          Padding(
+            padding: EdgeInsets.only(left: 20.0, top: 5.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                question.title,
+                style: TextStyle(fontSize: 30),
+              ),
+            ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0),
             child: Row(
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Icon(Icons.thumb_up),
+                    Icon(Icons.thumb_up,color: Colors.grey),
                     SizedBox(
                       width: 50.0,
-                      child: Text("100"),
+                      child: Text("100",style:TextStyle(color: Colors.grey)),
                     ),
-                    Icon(Icons.remove_red_eye),
+                    Icon(Icons.flag, color: Colors.red,),
                     SizedBox(
                       width: 50.0,
-                      child: Text("100"),
+                      child: Text("34%",style:TextStyle(color: Colors.grey)),
                     ),
                   ],
                 ),
@@ -33,8 +39,8 @@ class GameHero{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text("たかしくん"),
-                        Icon(Icons.person),
+                        Text("たかしくん",style:TextStyle(color: Colors.grey)),
+                        Icon(Icons.person, color: Colors.grey),
                       ],
                     )),
               ],

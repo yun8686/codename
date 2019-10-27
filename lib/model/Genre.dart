@@ -7,8 +7,9 @@ class Genre{
   static CollectionReference collection = Firestore.instance.collection(_COLLECTION_NAME);
 
   static Future<List<Genre>> getAll()async{
-    print("Genre getall");
-    List<Genre> genreList = List<Genre>();
+    List<Genre> genreList = await _getFromDB();
+    if(genreList.length > 0) return genreList;
+
     await collection.orderBy("sort").getDocuments().then((QuerySnapshot snapshot){
       genreList = snapshot.documents.map((DocumentSnapshot document){
         return Genre(
@@ -19,7 +20,6 @@ class Genre{
       }).toList();
     });
     await _setDB(genreList);
-    await _getFromDB();
     return genreList;
   }
 

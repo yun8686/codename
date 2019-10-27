@@ -32,6 +32,10 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('FindMembers'),
+        centerTitle: true,
+      ),
       body: getPageWidget(_selectedIndex),
       bottomNavigationBar: new BottomNavigationBar(
         items: [

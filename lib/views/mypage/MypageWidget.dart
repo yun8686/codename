@@ -15,10 +15,6 @@ class _MypageWidget extends State<MypageWidget>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FindMembers'),
-        centerTitle: true,
-      ),
     );
   }
 

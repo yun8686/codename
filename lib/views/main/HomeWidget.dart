@@ -17,6 +17,7 @@ class HomeWidget extends StatefulWidget{
 }
 
 class _homeTabState extends State<HomeWidget>with SingleTickerProviderStateMixin{
+
   static final Tab osusumeTab = const Tab(
     child: Text("おすすめ"),
   );
@@ -60,10 +61,38 @@ class _homeTabState extends State<HomeWidget>with SingleTickerProviderStateMixin
     return DefaultTabController(
       // タブの数
       length: this.tabs.length??0,
-      child: Scaffold(
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            color: Colors.blue,
+              child: TabBar(
+            // タブのオプション
+            controller: _tabController,
+            isScrollable: true,
+            unselectedLabelColor: Colors.white.withOpacity(0.3),
+            unselectedLabelStyle: TextStyle(fontSize: 12.0),
+            labelColor: Colors.yellowAccent,
+            labelStyle: TextStyle(fontSize: 16.0),
+            indicatorColor: Colors.white,
+            indicatorWeight: 2.0,
+            // タブに表示する内容
+            tabs: this.tabs??[],
+              )),
+          Expanded(child: TabBarView(
+            controller: _tabController,
+            // 各タブの内容
+            children: genreList.map((Genre genre){
+              return QuestionListWidget(genre: genre.id);
+            }).toList(),
+          ))
+        ],
+      ),
+/*      child: Scaffold(
         floatingActionButton: _selectTabIndex>0?QuestionCreateButton(_selectTabIndex):null,
         appBar: AppBar(
-          bottom: TabBar(
+          titleSpacing: 0.0,
+          title: TabBar(
             // タブのオプション
             controller: _tabController,
             isScrollable: true,
@@ -76,8 +105,6 @@ class _homeTabState extends State<HomeWidget>with SingleTickerProviderStateMixin
             // タブに表示する内容
             tabs: this.tabs??[],
           ),
-          title: const Text('FindMembers'),
-          centerTitle: true,
         ),
         body: TabBarView(
           controller: _tabController,
@@ -87,6 +114,7 @@ class _homeTabState extends State<HomeWidget>with SingleTickerProviderStateMixin
           }).toList(),
         ),
       ),
+ */
     );
   }
 
