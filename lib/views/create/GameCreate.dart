@@ -1,8 +1,7 @@
 import 'package:codename/model/Questions.dart';
-import 'package:codename/views/game/GameHero.dart';
-import 'package:codename/views/game/GameView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class GameCreate extends StatefulWidget {
   String genre;
@@ -28,41 +27,51 @@ class _GameCreateState extends State<GameCreate> {
     });
   }
 
-  bool sending = false;
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       resizeToAvoidBottomPadding:false,
       appBar: new AppBar(
-        title: new Text('連想ゲーム'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.help_outline),
+            onPressed: (){},
+          ),
+        ],
+        title: new Text('単語セットの登録'),
       ),
       body: Column(
         children: <Widget>[
-          TextField(
-            onChanged: (String title){
-              _question.setTitle(title);
-            },
+      Padding(
+        child: TextField(
+          onChanged: (String title){
+            _question.setTitle(title);
+          },
+          decoration: InputDecoration(
+            labelText: _question.title.length == 0?"キーワードを入力してください":"キーワード",
+            border: OutlineInputBorder(),
+            hintText: "例：海の生き物",
           ),
-          _listZone(CARDS),
+        ),
+        padding: EdgeInsets.all(20.0),
+      ),
+          _listZone(),
           Padding(
             padding: EdgeInsets.only(bottom: 30.0),
             child: RaisedButton(
-              child: Text("作成"),
+              child: const Text("登録"),
               color: Colors.blue,
               textColor: Colors.white,
               onPressed: () {
-                if(!sending){
-                  sending = true;
-                  _question.selections = CARDS.map((Data data){
-                    return data.toSelection();
-                  }).toList();
-                  _question.saveServer().then((v){
-                    Navigator.pop(context);
-                  });
-                  Scaffold.of(context).showSnackBar(new SnackBar(
-                    content: new Text("作成しました"),
-                  ));
+                if(_question.title.length == 0){
+                  showToast("キーワードを入力してください");
+                  return;
                 }
+                if(CARDS.indexWhere((data)=>data.answer) == -1){
+                  showToast("正解を一つ以上選択してください");
+                  return;
+                }
+                sendToServer(context);
               },
             ),
         ),
@@ -72,7 +81,33 @@ class _GameCreateState extends State<GameCreate> {
     );
   }
 
-  Widget _listZone(List<Data> CARDS){
+  bool sending = false;
+  void sendToServer(BuildContext context){
+    if(sending) return;
+    sending = true;
+
+    _question.selections = CARDS.map((Data data){
+      return data.toSelection();
+    }).toList();
+    _question.saveServer().then((v){
+      showToast("作成しました");
+      Navigator.pop(context);
+    });
+  }
+
+  void showToast(String msg){
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
+      fontSize: 16.0
+    );
+  }
+
+  Widget _listZone(){
     return Expanded(child:
     GridView.count(
       crossAxisCount: 5,
@@ -87,8 +122,11 @@ class _GameCreateState extends State<GameCreate> {
               ),
               onTap: (){
                 setState(() {
-                  CARDS[index].open();
+                  CARDS[index].changeAnswer();
                 });
+              },
+              onLongPressStart: (v){
+                CARDS[index].changeName(context);
               },
             )
         );
@@ -103,10 +141,6 @@ class Data{
   String name;
   bool answer;
   Color color;
-  Data(this.name){
-    color = Colors.blue.shade200;
-    this.answer = false;
-  }
   Data.fromSelection(Selection selection){
     this.name = selection.name;
     this.answer = selection.answer;
@@ -121,8 +155,33 @@ class Data{
     if(this.answer) return Colors.green;
     else return Colors.blue.shade200;
   }
-  void open(){
+  void changeAnswer(){
     this.answer = !this.answer;
+  }
+  void changeName(BuildContext context){
+    TextEditingController textEditingController = TextEditingController(text: this.name);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('単語を編集'),
+          content: TextField(
+            controller: textEditingController,
+            onChanged: (value){
+              this.name = value;
+            },
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
   Selection toSelection(){
     return Selection(this.name, this.answer);

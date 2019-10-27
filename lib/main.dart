@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:codename/model/Questions.dart';
 import 'package:codename/views/game/GameView.dart';
 import 'package:codename/views/main/HomeWidget.dart';
+import 'package:codename/views/mypage/MypageWidget.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -60,7 +61,7 @@ class _MainPageState extends State<MainPage> {
   Widget getPageWidget(int idx){
     switch(idx){
       case 1:
-        return HomeWidget();
+        return MypageWidget();
       case 0:
         return HomeWidget();
     }

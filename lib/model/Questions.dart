@@ -45,13 +45,11 @@ class Question{
   }
 
   static Future<List<Question>> getQuestionList({String genre})async{
-    print("getQuestionList:" + genre);
     QuerySnapshot querySnapshot = await collection.document(genre).collection("question").getDocuments();
     List<Question> questionList = List<Question>();
     querySnapshot.documents.forEach((DocumentSnapshot document){
       questionList.add(Question(document.data['title'],
         List<Map>.from(document.data["selections"]).map((Map map){
-          print(map['name'] + " " + map['answer'].toString());
           return Selection(map['name'], map['answer']);
         }).toList())
       );

@@ -8,25 +8,15 @@ import 'package:codename/model/Genre.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HomeWidget extends StatelessWidget {
-  HomeWidget(){
-  }
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: _HomeTabWidget(),
-    );
-  }
-}
 
-class _HomeTabWidget extends StatefulWidget{
+class HomeWidget extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     return _homeTabState();
   }
 }
 
-class _homeTabState extends State<_HomeTabWidget>with SingleTickerProviderStateMixin{
+class _homeTabState extends State<HomeWidget>with SingleTickerProviderStateMixin{
   static final Tab osusumeTab = const Tab(
     child: Text("おすすめ"),
   );
@@ -37,8 +27,7 @@ class _homeTabState extends State<_HomeTabWidget>with SingleTickerProviderStateM
   void initState() {
     super.initState();
     Genre.getAll().then((List<Genre> genreList){
-      setState(() {
-        print("state");
+      if(this.mounted)setState(() {
         this.genreList = genreList;
         this.tabs = genreList.map((Genre genre) {
           return Tab(
@@ -52,7 +41,7 @@ class _homeTabState extends State<_HomeTabWidget>with SingleTickerProviderStateM
         this._selectGenre = this.genreList[this._selectTabIndex].id;
 
         this._tabController.addListener((){
-          setState(() {
+          if(this.mounted)setState(() {
             this._selectTabIndex = this._tabController.index;
             this._selectGenre = this.genreList[this._selectTabIndex].id;
           });
@@ -130,7 +119,7 @@ class _QuestionListState extends State<StatefulWidget> {
   _QuestionListState({String genre}){
     if(genre == "popular") genre = "animal";
     Question.getQuestionList(genre: genre).then((List<Question> questionList) {
-      setState(() {
+      if(this.mounted)setState(() {
         this.questionList = questionList;
       });
     });
