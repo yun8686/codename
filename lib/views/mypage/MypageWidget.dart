@@ -1,3 +1,5 @@
+import 'package:codename/model/Genre.dart';
+import 'package:codename/views/create/GameCreate.dart';
 import 'package:flutter/material.dart';
 
 class MypageWidget extends StatefulWidget {
@@ -15,7 +17,22 @@ class _MypageWidget extends State<MypageWidget>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      floatingActionButton: QuestionCreateButton(),
     );
   }
+  Widget QuestionCreateButton(){
+    return FloatingActionButton.extended(
+      label: Text("問題作成"),
+      onPressed: (){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GameCreate(genre: "animal",),
+            )
+        );
+      },
+    );
+  }
+
 
 }

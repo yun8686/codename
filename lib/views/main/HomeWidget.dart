@@ -88,52 +88,8 @@ class _homeTabState extends State<HomeWidget>with SingleTickerProviderStateMixin
           ))
         ],
       ),
-/*      child: Scaffold(
-        floatingActionButton: _selectTabIndex>0?QuestionCreateButton(_selectTabIndex):null,
-        appBar: AppBar(
-          titleSpacing: 0.0,
-          title: TabBar(
-            // タブのオプション
-            controller: _tabController,
-            isScrollable: true,
-            unselectedLabelColor: Colors.white.withOpacity(0.3),
-            unselectedLabelStyle: TextStyle(fontSize: 12.0),
-            labelColor: Colors.yellowAccent,
-            labelStyle: TextStyle(fontSize: 16.0),
-            indicatorColor: Colors.white,
-            indicatorWeight: 2.0,
-            // タブに表示する内容
-            tabs: this.tabs??[],
-          ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          // 各タブの内容
-          children: genreList.map((Genre genre){
-            return QuestionListWidget(genre: genre.id);
-          }).toList(),
-        ),
-      ),
- */
     );
   }
-
-
-  Widget QuestionCreateButton(int index){
-    return FloatingActionButton.extended(
-      label: Text("問題作成"),
-      onPressed: (){
-        print("_selectGenre:" + _selectGenre);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GameCreate(genre: _selectGenre,),
-            )
-        );
-      },
-    );
-  }
-
 }
 
 
