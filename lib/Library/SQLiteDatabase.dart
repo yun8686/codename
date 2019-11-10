@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class Tables{
   static final String Genre = "Genre";
+  static final String Mydata = "Mydata";
 }
 
 class MySQLiteDatabase {
@@ -22,6 +23,13 @@ class MySQLiteDatabase {
             name TEXT,
             sort integer primary key
           );
+        """);
+        newDb.execute("""
+        CREATE TABLE ${Tables.Mydata}
+        (
+            id TEXT primary key,
+            name TEXT
+        );
         """);
       },
     );

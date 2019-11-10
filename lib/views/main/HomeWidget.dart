@@ -117,14 +117,13 @@ class _QuestionListState extends State<StatefulWidget> {
         children: this.questionList.length>0?this.questionList.map((Question question){
           return Container(
               width: double.infinity,
-              height: 100.0,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => GameView(question: question),
-                      )
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => GameView(question: question),
+                    )
                   );
                 },
                 child: GameHero.createTitleCard(question),

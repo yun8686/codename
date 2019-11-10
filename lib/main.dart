@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:codename/model/Questions.dart';
+import 'package:codename/views/SplashScreen/SplashWidget.dart';
 import 'package:codename/views/game/GameView.dart';
 import 'package:codename/views/main/HomeWidget.dart';
 import 'package:codename/views/mypage/MypageWidget.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(),
+      home: SplashWidget(),
     );
   }
 }

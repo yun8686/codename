@@ -1,24 +1,24 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:codename/model/Questions.dart';
 import 'package:flutter/material.dart';
 
 class GameHero{
   static Card createTitleCard(Question question){
     return Card(
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 20.0, top: 5.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
+      child: Padding(
+        padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              width: double.infinity,
+              height: 60.0,
+              child: AutoSizeText(
                 question.title,
-                style: TextStyle(fontSize: 30),
+                maxLines: 1,
+                style: TextStyle(fontSize: 32.0, color: Colors.black),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0),
-            child: Row(
+            Row(
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -36,17 +36,18 @@ class GameHero{
                   ],
                 ),
                 Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Text("たかしくん",style:TextStyle(color: Colors.grey)),
-                        Icon(Icons.person, color: Colors.grey),
-                      ],
-                    )),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text("たかしくん",style: TextStyle(color: Colors.grey)),
+                      Icon(Icons.person, color: Colors.grey),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
