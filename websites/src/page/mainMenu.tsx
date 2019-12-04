@@ -22,7 +22,7 @@ class WordManage extends React.Component {
     console.log(this.state.wordList);
     return (
       <div className="driver">
-        <h1>メインメニュー</h1>
+        <h1 className="header">メインメニュー</h1>
         <span>
         <ul>
           <li><Link to='/'>Home</Link></li>
