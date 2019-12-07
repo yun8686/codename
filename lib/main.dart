@@ -1,11 +1,31 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:codename/views/Challenge/Challenge.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: new MyHomePage(),
+    );
+  }
+}
+
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key}) : super(key: key);
+
+  @override
+  _MyHomePageState createState() => new _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +40,17 @@ class MyApp extends StatelessWidget {
                     SizedBox(height: 200,),
                     Text("Code Name"),
                     SizedBox(height: 100,),
-                    button(buttonText: "挑戦する"),
+                    button(
+                      buttonText: "挑戦する",
+                      onPressed: (){
+                        Navigator.of(context, rootNavigator: true).push(
+                          new MaterialPageRoute<Null>(
+                            settings: const RouteSettings(name: "/Challenge"),
+                            builder: (BuildContext context) => Challenge(/* 必要なパラメータがあればここで渡す */),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 30,),
                     button(buttonText: "問題を編集"),
                     SizedBox(height: 30,),
@@ -37,9 +67,10 @@ class MyApp extends StatelessWidget {
 
   RaisedButton button({
     String buttonText,
+    Function onPressed ,
   }) {
     return RaisedButton(
-      onPressed: () {},
+      onPressed: onPressed??(){},
       textColor: Colors.white,
       padding: const EdgeInsets.all(0.0),
       child: Container(
