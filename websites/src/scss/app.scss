@@ -1,2 +1,15 @@
 @import './reset.scss';
 
+.background{
+  background-image: url('/yadon_sp.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+.header{
+  font-size: 24px;
+  text-align: center;
+  padding: 8px;
+}
+
