@@ -24,10 +24,9 @@ class WordManage extends React.Component {
       <div className="driver">
         <h1 className="header">メインメニュー</h1>
         <span>
-        <ul>
-          <li><Link to='/'>Home</Link></li>
-          <li><Link to='/createWords'>言葉作成</Link></li>
-          <li><Link to='/wordManage'>言葉管理</Link></li>
+        <ul className="menu">
+          <li className="menu-item"><Link to='/createWords'>言葉作成</Link></li>
+          <li className="menu-item"><Link to='/wordManage'>言葉管理</Link></li>
         </ul>
         </span>
       </div>

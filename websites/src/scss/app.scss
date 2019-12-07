@@ -1,15 +1,52 @@
 @import './reset.scss';
+@import './color.scss';
 
-.background{
+// ボタン用のクラス
+.button{
+  display: block;
+  text-align: center;
+  padding: 8px;
+  background-color: $mainColor;
+  color: #FFF;
+  text-decoration: none;
+  line-height: 28px;
+}
+
+.background {
   background-image: url('/yadon_sp.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   height: 100vh;
 }
 
-.header{
+.header {
   font-size: 24px;
   text-align: center;
-  padding: 8px;
+  padding: 16px 8px 0;
 }
 
+.menu {
+  background-color: #FFF;
+  width: 80vw;
+  margin: 20px auto 0;
+  border: 2px solid #CCC;
+  border-radius: 8px;
+  padding: 16px 0;
+}
+
+.menu-item {
+  width: 80%;
+  margin: 0 auto 16px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  a {
+    @extend .button
+  }
+}
+
+button{
+  @extend .button
+}
