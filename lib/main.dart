@@ -1,10 +1,5 @@
 import 'dart:math';
 
-import 'package:codename/model/Questions.dart';
-import 'package:codename/views/SplashScreen/SplashWidget.dart';
-import 'package:codename/views/game/GameView.dart';
-import 'package:codename/views/main/HomeWidget.dart';
-import 'package:codename/views/mypage/MypageWidget.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -14,64 +9,53 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SplashWidget(),
-    );
-  }
-}
-
-class MainPage extends StatefulWidget {
-  @override
-  _MainPageState createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('FindMembers'),
-        centerTitle: true,
-      ),
-      body: getPageWidget(_selectedIndex),
-      bottomNavigationBar: new BottomNavigationBar(
-        items: [
-          new BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            title: new Text('Home'),
+      home: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 200,),
+                    Text("Code Name"),
+                    SizedBox(height: 100,),
+                    button(buttonText: "挑戦する"),
+                    SizedBox(height: 30,),
+                    button(buttonText: "問題を編集"),
+                    SizedBox(height: 30,),
+                    button(buttonText: "マイページ"),
+                  ],
+                ),
+              ),
+            ],
           ),
-          new BottomNavigationBarItem(
-            icon: const Icon(Icons.person),
-            title: new Text('Mypage'),
-          ),
-        ],
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.lightBlueAccent,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        ),
       ),
     );
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  RaisedButton button({
+    String buttonText,
+  }) {
+    return RaisedButton(
+      onPressed: () {},
+      textColor: Colors.white,
+      padding: const EdgeInsets.all(0.0),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: <Color>[
+              Color(0xFF0D47A1),
+              Color(0xFF1976D2),
+              Color(0xFF42A5F5),
+            ],
+          ),
+        ),
+        padding: const EdgeInsets.all(10.0),
+        child: Text(buttonText),
+        width: 300,
+      ),
+    );
   }
-
-  Widget getPageWidget(int idx){
-    switch(idx){
-      case 1:
-        return MypageWidget();
-      case 0:
-        return HomeWidget();
-    }
-    return HomeWidget();
-  }
-
-
 }
