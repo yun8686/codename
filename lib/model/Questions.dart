@@ -27,13 +27,15 @@ class Question{
   Future setSelection(){
     return WordSet.getWordSet(this.genre).then((DocumentSnapshot document){
       List<String> wordList = List.from(document.data["words"]);
+      wordList = shuffle(wordList);
+      wordList.removeRange(25, wordList.length);
       wordList.forEach((String name){
         this.selections.add(Selection(name, false));
       });
     });
   }
   Future<DocumentReference> saveServer(){
-    return collection.document(this.genre).collection("question").add({
+    return collection.add({
       'title': this.title,
       'selections': this.selections.map((Selection selection){
         return {
@@ -45,7 +47,7 @@ class Question{
   }
 
   static Future<List<Question>> getQuestionList({String genre})async{
-    QuerySnapshot querySnapshot = await collection.document(genre).collection("question").getDocuments();
+    QuerySnapshot querySnapshot = await collection.getDocuments();
     List<Question> questionList = List<Question>();
     querySnapshot.documents.forEach((DocumentSnapshot document){
       questionList.add(Question(document.data['title'],
@@ -58,7 +60,7 @@ class Question{
     return questionList;
   }
 
-  static List shuffle(List<Selection> items) {
+  static List shuffle(List items) {
     var random = new Random();
 
     // Go through all elements.

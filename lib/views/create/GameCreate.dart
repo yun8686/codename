@@ -38,7 +38,7 @@ class _GameCreateState extends State<GameCreate> {
             onPressed: (){},
           ),
         ],
-        title: new Text('単語セットの登録'),
+        title: new Text('問題の登録'),
       ),
       body: Column(
         children: <Widget>[

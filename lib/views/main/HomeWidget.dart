@@ -101,7 +101,6 @@ class QuestionListWidget extends StatefulWidget {
 
 class _QuestionListState extends State<StatefulWidget> {
   _QuestionListState({String genre}){
-    if(genre == "popular") genre = "animal";
     Question.getQuestionList(genre: genre).then((List<Question> questionList) {
       if(this.mounted)setState(() {
         this.questionList = questionList;
