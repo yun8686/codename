@@ -4,6 +4,8 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import CreateWords from './page/menu/createWords';
 import wordManage from './page/menu/wordManage';
+import gameList from './page/menu/gameList';
+import gameData from './page/menu/gameData';
 import mainMenu from './page/mainMenu';
 
 // typeScriptの場合は「interface」でState管理している
@@ -20,6 +22,8 @@ class App extends React.Component {
           <Route exact={true} path='/' component={mainMenu} />
           <Route exact={true} path='/createWords' component={CreateWords} />
           <Route exact={true} path="/wordManage" component={wordManage} />
+          <Route exact={true} path="/gameList" component={gameList} />
+          <Route exact={true} path="/gameData/:id" component={gameData} />
         </Switch>
       </BrowserRouter>
     );

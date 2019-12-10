@@ -27,6 +27,7 @@ class WordManage extends React.Component {
         <ul className="menu">
           <li className="menu-item"><Link to='/createWords'>言葉作成</Link></li>
           <li className="menu-item"><Link to='/wordManage'>言葉管理</Link></li>
+          <li className="menu-item"><Link to='/gameList'>ゲームリスト</Link></li>
         </ul>
         </span>
       </div>
