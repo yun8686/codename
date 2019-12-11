@@ -34,16 +34,25 @@ class CreateGame extends React.Component {
     console.log(words);
   }
   public async createGame(){
-    if(this.state.wordList.filter(v=>v.answer).length == 0
-    || this.state.title == "" || !this.state.title){
+    if(this.state.wordList.filter(v=>v.answer).length === 0
+    || this.state.title === "" || !this.state.title){
       return;
     }
     const database = firebase.firestore();
-     await database.collection("questions").add({
-       selections: this.state.wordList,
-       title: this.state.title,
-     });
-     alert('作成しました');
+
+    const batch = database.batch();
+    const quetionRef = database.collection("questions").doc();
+    const questionId = quetionRef.id;
+    batch.set(quetionRef, {
+      selections: this.state.wordList,
+      title: this.state.title,
+    });
+    batch.update(database.collection("manageData").doc("counter"), {
+      questions: firebase.firestore.FieldValue.increment(1),
+      questionId: questionId,
+    });
+    await batch.commit();
+    alert('作成しました');
   }
 
   private suffleSort(array: any[]){
