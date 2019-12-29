@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codename/Model/Question.dart';
 import 'package:codename/Provider/QuestionsProvider.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +47,7 @@ class _QuestionAreaState extends State<_QuestionArea> {
           title = question.title;
           selections = question.selections.map((Selection selection){
             return _BoardSelection.fromSelection(selection);
-          });
+          }).toList();
           selected = 0;
           answers = question.answers;
         });
@@ -75,6 +74,7 @@ class _QuestionAreaState extends State<_QuestionArea> {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: 30,),
           SizedBox(
             width: double.infinity,
             height: 100.0,
@@ -105,15 +105,20 @@ class _QuestionAreaState extends State<_QuestionArea> {
                 return new GridTile(
                     child: GestureDetector(
                       child: Card(
-                        color: card.answer ? Colors.red : Colors.green,
-                        child: new Center(
-                          child: new Text(card.name),
+                        color: card.selected?(card.answer ? Colors.green : Colors.red):Colors.white,
+                        child: Center(
+                          child: Stack(
+                            children: <Widget>[
+                              Text(card.name),
+                            ],
+                          ),
                         ),
                       ),
                       onTap: (){
                         print("tap");
                         setState(() {
-                          card.answer = !card.answer;
+                          card.selected = !card.selected;
+                          showResultDialog();
                         });
                       },
                     )
@@ -124,4 +129,64 @@ class _QuestionAreaState extends State<_QuestionArea> {
         ]
     );
   }
+
+  void showResultDialog(){
+    String title = "";
+    if(selected == answers) title = "Win";
+    else title = "Lose";
+    FocusNode _commentFocusNode = FocusNode();
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+              title: Text(title),
+              content: GestureDetector(
+                onTap:(){
+                  _commentFocusNode.unfocus();
+                  },
+                child: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text("この問題はどうでしたか？"),
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.star, size: 40),
+                          Icon(Icons.star, size: 40),
+                          Icon(Icons.star, size: 40),
+                          Icon(Icons.star, size: 40),
+                          Icon(Icons.star_border, size: 40),
+                        ],
+                      ),
+                      Text("コメントを入力"),
+                      TextField(
+                        enabled: true,
+                        maxLength: 200,
+                        maxLengthEnforced: false,
+                        style: TextStyle(color: Colors.black),
+                        obscureText: false,
+                        maxLines: 3,
+                        focusNode: _commentFocusNode,
+                      ),
+                      Text("コメントを見る(1件)"),
+                    ],
+                  ),
+                ),
+              ),
+          actions: <Widget>[
+            // ボタン
+            FlatButton(
+              child: Text("評価しない"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
