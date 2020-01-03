@@ -17,6 +17,7 @@ class QuestionsProvider{
         .limit(1).getDocuments();
 
     return Question(
+      documentId: querySnapshot.documents[0].documentID,
       title: querySnapshot.documents[0].data["title"],
       selections:(querySnapshot.documents[0].data["selections"] as List)
           .map((data)=>Selection(data["name"], data["answer"])).toList(),

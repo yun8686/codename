@@ -1,3 +1,4 @@
+import 'package:codename/views/Creator/CreatedList.dart';
 import 'package:flutter/material.dart';
 import 'package:codename/views/Challenge/Challenge.dart';
 
@@ -52,7 +53,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                     SizedBox(height: 30,),
-                    button(buttonText: "問題を編集"),
+                    button(
+                      buttonText: "問題を編集",
+                      onPressed: (){
+                        Navigator.of(context, rootNavigator: true).push(
+                          new MaterialPageRoute<Null>(
+                            settings: const RouteSettings(name: "/Created"),
+                            builder: (BuildContext context) => CreatedList(/* 必要なパラメータがあればここで渡す */),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 30,),
                     button(buttonText: "マイページ"),
                   ],
