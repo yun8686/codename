@@ -29,6 +29,7 @@ dependencies:
   cloud_functions: any
 
   auto_size_text: any
+  sqflite: any
 
 dev_dependencies:
   flutter_test:

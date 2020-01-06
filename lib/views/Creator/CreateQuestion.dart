@@ -1,18 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:codename/Database/Questions.dart';
 import 'package:codename/Model/Question.dart';
 import 'package:codename/Model/WordSet.dart';
+import 'package:codename/Provider/QuestionsProvider.dart';
 import 'package:codename/Provider/WordSetProvider.dart';
 import 'package:flutter/material.dart';
 
 class CreateQuestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("問題を作成")),
-      body: SafeArea(
-        child: _QuestionArea(),
-      ),
-    );
+    return _QuestionArea();
   }
 }
 
@@ -27,12 +24,12 @@ class _QuestionArea extends StatefulWidget {
 }
 
 class _QuestionAreaState extends State<_QuestionArea> {
+  static final String WORD_CLASS = "animal";
   List<_BoardSelection> wordList = [];
   String title = "〇〇を探せ！";
   @override
   void initState() {
-    // TODO: implement initState
-    WordSetProvider.getRandomWords("animal", 25).then((WordSet wordlist){
+    WordSetProvider.getRandomWords(WORD_CLASS, 25).then((WordSet wordlist){
       setState(() {
         this.wordList = wordlist.words.map((word){
           return _BoardSelection(word, false);
@@ -43,6 +40,30 @@ class _QuestionAreaState extends State<_QuestionArea> {
   }
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("問題を作成"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh, color: Colors.white,),
+            onPressed: (){
+              WordSetProvider.getRandomWords(WORD_CLASS, 25).then((WordSet wordlist){
+                setState(() {
+                  this.wordList = wordlist.words.map((word){
+                    return _BoardSelection(word, false);
+                  }).toList();
+                });
+              });
+            },
+          )
+        ],
+      ),
+      body: SafeArea(
+        child: mainContant(context),
+      ),
+    );
+  }
+  Widget mainContant(BuildContext context) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -112,7 +133,10 @@ class _QuestionAreaState extends State<_QuestionArea> {
               }).toList(),
             ),
           ),
-          button(buttonText: "作成する"),
+          button(
+            buttonText: "作成する",
+            onPressed: doCreate,
+          ),
           SizedBox(height: 40,),
         ],
     );
@@ -143,6 +167,17 @@ class _QuestionAreaState extends State<_QuestionArea> {
         });
   }
 
+  Future doCreate()async{
+    Question question = await QuestionsProvider.putQuestion(Question(
+      documentId: null,
+      title: title,
+      selections: wordList,
+    ));
+
+    print("作成します");
+    await Questions.insert(question);
+    print("作成しました");
+  }
 
   RaisedButton button({
     String buttonText,

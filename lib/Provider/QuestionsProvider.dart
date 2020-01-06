@@ -23,6 +23,22 @@ class QuestionsProvider{
           .map((data)=>Selection(data["name"], data["answer"])).toList(),
     );
   }
+
+  static Future<Question> putQuestion(Question question) async {
+    if(question.documentId == null){
+      WriteBatch batch = Firestore.instance.batch();
+      DocumentReference questionRef = collection.document();
+      String questionId = questionRef.documentID;
+      batch.setData(questionRef, question.toMap());
+      batch.updateData(manageDataCollection.document("counter"), {
+        "questions": FieldValue.increment(1),
+        "questionId": questionId,
+      });
+      await batch.commit();
+      question.documentId = questionId;
+    }
+    return question;
+  }
 }
 
 

@@ -59,12 +59,16 @@ class _QuestionAreaState extends State<_QuestionArea> {
       const timeout = const Duration(milliseconds: 1000);
       Timer.periodic(timeout, (Timer t) {
         if (mounted) {
-          setState(() {
-            progress = progress + 1000 / limittime;
-            if (progress > 1) {
-              progress = 0.0;
-            }
-          });
+          if(!isGaming){
+            t.cancel();
+          }else{
+            setState(() {
+              progress = progress + 1000 / limittime;
+              if (progress > 1) {
+                progress = 0.0;
+              }
+            });
+          }
         } else {
           t.cancel();
         }
@@ -184,12 +188,11 @@ class _QuestionAreaState extends State<_QuestionArea> {
               // ボタン
               FlatButton(
                 child: Text("評価しない"),
-                onPressed: () => Navigator.pop(context),
+                onPressed: ()=>Navigator.pop(context),
               ),
               FlatButton(
                 child: Text("OK"),
                 onPressed: () async {
-                  print(this.starNum.toString() + ":" + this.comment);
                   ReviewsProvider.addComment(questionId, Comment(
                     star: this.starNum,
                     comment: this.comment,
@@ -225,7 +228,7 @@ class ReviewWidget extends StatefulWidget{
   }
 }
 class ReviewState extends State<ReviewWidget>{
-  int starnum = 0;
+  int starnum = 5;
   String comment="";
   Function(int,String) onChange;
   ReviewState(this.onChange);
