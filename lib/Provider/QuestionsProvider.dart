@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
 import 'package:codename/Model/Question.dart';
+import 'package:codename/Model/User.dart';
+import 'package:codename/Provider/UsersProvider.dart';
 
 class QuestionsProvider{
   static const String _COLLECTION_NAME = "questions";
@@ -38,6 +40,17 @@ class QuestionsProvider{
       question.documentId = questionId;
     }
     return question;
+  }
+
+  static Future<List<Question>> getCreatedQuestions() async {
+    User user = await UsersProvider.getMyUser();
+    user.userId;
+    QuerySnapshot querySnapshot = await collection
+        .where("creatorUid", isEqualTo: user.userId)
+        .getDocuments();
+    return querySnapshot.documents.map((document){
+      return Question.fromMap(document.data);
+    }).toList();
   }
 }
 

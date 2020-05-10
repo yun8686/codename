@@ -25,4 +25,9 @@ class Questions{
     list = await database.rawQuery("SELECT * FROM " + DatabaseCommon.TABLE_SELECTIONS);
     print(list);
   }
+  static Future<void> printData()async{
+    Database database = await DatabaseCommon.getDatabase();
+    List<Map> list = await database.rawQuery('SELECT * FROM ' + DatabaseCommon.TABLE_QUESTIONS);
+    print(list);
+  }
 }

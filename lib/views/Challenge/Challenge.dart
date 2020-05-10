@@ -153,7 +153,10 @@ class _QuestionAreaState extends State<_QuestionArea> {
                           }
                         });
                       }
-                      showResultDialog();
+                      showResultDialog((){
+                        print("evalute ok");
+                        Navigator.pop(context);
+                      });
                     },
                   )
               );
@@ -166,10 +169,10 @@ class _QuestionAreaState extends State<_QuestionArea> {
 
   int starNum;
   String comment;
-  void showResultDialog() {
+  void showResultDialog(Function() onCommit) {
     if (life > 0 && selected != answers) return;
     isGaming = false;
-    String title = selected == answers ? "Win" : "Lose";
+    String title = selected == answers ? "チャレンジ成功！" : "チャレンジ失敗";
 
     getReview().then((Review review) {
       showDialog(
@@ -179,6 +182,7 @@ class _QuestionAreaState extends State<_QuestionArea> {
           return AlertDialog(
             title: Text(title),
             content: ReviewWidget(
+              review: review,
               onChange:(int starNum, String comment){
                 this.starNum = starNum;
                 this.comment = comment;
@@ -188,16 +192,20 @@ class _QuestionAreaState extends State<_QuestionArea> {
               // ボタン
               FlatButton(
                 child: Text("評価しない"),
-                onPressed: ()=>Navigator.pop(context),
+                onPressed: (){
+                  Navigator.pop(context);
+                  onCommit();
+                },
               ),
               FlatButton(
                 child: Text("OK"),
                 onPressed: () async {
-                  ReviewsProvider.addComment(questionId, Comment(
+                  await ReviewsProvider.addComment(questionId, Comment(
                     star: this.starNum,
                     comment: this.comment,
                   ));
                   Navigator.pop(context);
+                  onCommit();
                 },
               ),
             ],
@@ -221,17 +229,19 @@ class _QuestionAreaState extends State<_QuestionArea> {
 
 class ReviewWidget extends StatefulWidget{
   Function(int,String) onChange;
-  ReviewWidget({this.onChange});
+  Review review;
+  ReviewWidget({this.onChange, this.review});
   @override
   State<StatefulWidget> createState() {
-    return ReviewState(onChange);
+    return ReviewState(onChange:onChange, review:review,);
   }
 }
 class ReviewState extends State<ReviewWidget>{
   int starnum = 5;
   String comment="";
+  Review review;
   Function(int,String) onChange;
-  ReviewState(this.onChange);
+  ReviewState({this.onChange, this.review});
 
   @override
   void setState(fn) {
@@ -249,7 +259,7 @@ class ReviewState extends State<ReviewWidget>{
       child: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text("この問題はどうでしたか？"),
+            Text("この問題の難易度はどうでしたか？"),
             Row(
               children: starIcons(40.0),
             ),
@@ -268,7 +278,7 @@ class ReviewState extends State<ReviewWidget>{
                 });
               },
             ),
-            Text("コメントを見る(1件)"),
+            _CommentListText(review),
           ],
         ),
       ),
@@ -283,10 +293,63 @@ class ReviewState extends State<ReviewWidget>{
               starnum = i;
             });
           }, child: Icon(
-        i <= starnum ? Icons.star : Icons.star_border,
-        size: size,
+            i <= starnum ? Icons.star : Icons.star_border,
+            color: Colors.yellowAccent,
+            size: size,
       )));
     }
     return list;
   }
+
+}
+
+class _CommentListText extends StatelessWidget {
+  Review review;
+  _CommentListText(this.review);
+  @override
+  Widget build(BuildContext context) {
+    int count = review.comments.length;
+    return ExpansionTile(
+      title: Text("コメントを見る($count件)"),
+      children: review.comments.map((comment){
+        return commentWidget(comment);
+      }).toList(),
+    );
+  }
+
+  Widget commentWidget(Comment comment){
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Row(children: starIcons(20.0, comment.star)),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(comment.comment??""),
+          ),
+        ],
+      ),
+        padding: EdgeInsets.only(top: 15.0, bottom: 5.0),
+        decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 1.0, color: Colors.grey),
+        ),
+        color: Colors.white,
+      ),      
+    );
+  }
+
+
+  List<Widget> starIcons(double size, int starnum) {
+    List<Widget> list = List<Widget>();
+    starnum = starnum??0;
+    for (int i = 1; i <= 5; i++) {
+      list.add(Icon(
+            i <= starnum ? Icons.star : Icons.star_border,
+            color: Colors.yellowAccent,
+            size: size,
+      ));
+    }
+    return list;
+  }
+
 }

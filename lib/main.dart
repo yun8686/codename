@@ -1,3 +1,5 @@
+import 'package:codename/Database/Questions.dart';
+import 'package:codename/Provider/UsersProvider.dart';
 import 'package:codename/views/Creator/CreatedList.dart';
 import 'package:flutter/material.dart';
 import 'package:codename/views/Challenge/Challenge.dart';
@@ -26,6 +28,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    Questions.printData();
+    UsersProvider.getMyUser().then((v){
+      print(v);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

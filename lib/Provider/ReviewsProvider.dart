@@ -1,42 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math';
 
 import 'package:codename/Model/Review.dart';
 
 class ReviewsProvider{
   static const String _COLLECTION_NAME = "reviews";
+  static const String _COMMENT_COLLECTION_NAME = "comments";
   static CollectionReference collection = Firestore.instance.collection(_COLLECTION_NAME);
 
-  static Future<Review> addReview(String questionId, int stars, String comment) async {
-    collection.document(questionId).documentID;
-
-  }
   static Future<Review> getReview(String questionId) async {
     DocumentSnapshot snapshot = await collection.document(questionId).get();
     if(!snapshot.exists){
-      await collection.document(questionId).setData({
-        'stars': 0,
-        'comment':[],
-      });
+      await collection.document(questionId).setData({'comment': true});
+      return Review(
+        questionId: questionId,
+        stars: 0,
+        comments: List<Comment>(),
+      );
     }else{
-      print(snapshot.data);
-      List<Comment> comments = (snapshot.data['comment'] as List).map((comment){
-        return Comment(
-          comment: comment['comment'],
-          star: comment['star'],
-        );
-      }).toList();
+      QuerySnapshot commentsQuery = await collection.document(questionId).collection(_COMMENT_COLLECTION_NAME).orderBy("createdAt", descending: true).limit(5).getDocuments();
       return Review(
         questionId: questionId,
         stars: snapshot.data['stars'],
-        comments: comments,
+        comments: commentsQuery.documents.map((document){
+          return Comment.fromMap(document.data);
+        }).toList(),
       );
     }
   }
   static Future<void> addComment(String questionId, Comment comment){
-    return collection.document(questionId).updateData({
-      'comment': FieldValue.arrayUnion([comment.toMap()]),
-    });
+    print(questionId);
+    Map<String, dynamic> data = comment.toMap();
+    data['createdAt'] = FieldValue.serverTimestamp();
+    return collection.document(questionId)
+      .collection(_COMMENT_COLLECTION_NAME)
+      .add(data);
   }
 }
 

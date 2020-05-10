@@ -1,8 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:codename/Database/Questions.dart';
 import 'package:codename/Model/Question.dart';
+import 'package:codename/Model/User.dart';
 import 'package:codename/Model/WordSet.dart';
 import 'package:codename/Provider/QuestionsProvider.dart';
+import 'package:codename/Provider/UsersProvider.dart';
 import 'package:codename/Provider/WordSetProvider.dart';
 import 'package:flutter/material.dart';
 
@@ -24,9 +25,9 @@ class _QuestionArea extends StatefulWidget {
 }
 
 class _QuestionAreaState extends State<_QuestionArea> {
-  static final String WORD_CLASS = "animal";
+  static const String WORD_CLASS = "animal";
   List<_BoardSelection> wordList = [];
-  String title = "〇〇を探せ！";
+  String title = "";
   @override
   void initState() {
     WordSetProvider.getRandomWords(WORD_CLASS, 25).then((WordSet wordlist){
@@ -69,10 +70,14 @@ class _QuestionAreaState extends State<_QuestionArea> {
         children: [
           GestureDetector(
             onTap: (){
-              _displayDialog(context, this.title, (String value){
-                setState(() {
-                  this.title = value;
-                });
+              _displayDialog(context, this.title,
+                title: "タイトルを変更",
+                hintText: "問題のタイトル",
+                maxLength: 20,
+                onChanged: (String value){
+                  setState(() {
+                    this.title = value;
+                  });
               });
             },
             child: SizedBox(
@@ -81,7 +86,8 @@ class _QuestionAreaState extends State<_QuestionArea> {
               child: Stack(
                 children: <Widget>[
                   Align(
-                    child: AutoSizeText(this.title,
+                    child: AutoSizeText(
+                      this.title==""?"タイトルを入力":this.title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 40,
@@ -121,7 +127,10 @@ class _QuestionAreaState extends State<_QuestionArea> {
                       },
                       onLongPress: (){
                         _displayDialog(
-                          context, selection.name,(String newName){
+                          context, selection.name,
+                          title: "選択肢を変更",
+                          maxLength: 10,
+                          onChanged: (String newName){
                             setState(() {
                               selection.name = newName;
                             });
@@ -135,48 +144,75 @@ class _QuestionAreaState extends State<_QuestionArea> {
           ),
           button(
             buttonText: "作成する",
-            onPressed: doCreate,
+            onPressed: (){
+              doCreate(context);
+            },
           ),
           SizedBox(height: 40,),
         ],
     );
   }
 
-  _displayDialog(BuildContext context, String defText, Function(String) onChanged) async {
-    TextEditingController _textFieldController = TextEditingController(text:defText);
+  _displayDialog(BuildContext context, String defText, {
+    Function (String) onChanged,
+    String title,
+    String hintText,
+    int maxLength,
+  }) async {
+    final TextEditingController _textFieldController = TextEditingController(text:defText);
+    final formKey = GlobalKey<FormState>();
     return showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('TextField in Dialog'),
-            content: TextField(
-
+          return Form(
+            key:formKey,
+            child: AlertDialog(
+            title: Text(title),
+            content: TextFormField(
+              maxLength: maxLength??20,
+              decoration: InputDecoration(hintText: hintText??""),
               controller: _textFieldController,
-              decoration: InputDecoration(hintText: "TextField in Dialog"),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'テキストを入力してください。';
+                }
+              },
             ),
             actions: <Widget>[
               new FlatButton(
                 child: new Text('OK'),
                 onPressed: () {
-                  onChanged(_textFieldController.text);
-                  Navigator.of(context).pop();
+                  if(formKey.currentState.validate()){
+                    onChanged(_textFieldController.text);
+                    Navigator.of(context).pop();
+                  }
                 },
               )
             ],
+          ),
           );
         });
   }
 
-  Future doCreate()async{
-    Question question = await QuestionsProvider.putQuestion(Question(
+  Future doCreate(BuildContext context)async{
+    User user = await UsersProvider.getMyUser();
+    int ansCount = wordList.where((v){return v.answer;}).length;
+    print("ansCount: " + ansCount.toString());
+    if(ansCount == 0){
+      await ShowSimpleDialog("答えを一つ以上設定してください");
+      return;
+    }
+    if(this.title == ""){
+      await ShowSimpleDialog("タイトルを入力してください");
+      return;
+    }
+    await QuestionsProvider.putQuestion(Question(
       documentId: null,
-      title: title,
+      title: this.title,
+      creatorUid: user.userId,
       selections: wordList,
     ));
-
     print("作成します");
-    await Questions.insert(question);
-    print("作成しました");
   }
 
   RaisedButton button({
@@ -195,6 +231,22 @@ class _QuestionAreaState extends State<_QuestionArea> {
         child: Center(child: Text(buttonText),),
         width: 200,
       ),
+    );
+  }
+
+  Future<void> ShowSimpleDialog(String text)async{
+    await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, 1),
+              child: Text(text, style: TextStyle(color: Colors.red),),
+            ),
+          ],
+        );
+      },
     );
   }
 }

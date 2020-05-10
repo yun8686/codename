@@ -4,7 +4,7 @@ class DatabaseCommon{
   static const String TABLE_QUESTIONS = "Questions";
   static const String TABLE_SELECTIONS = "Selections";
   static Future<Database> getDatabase()async{
-    Database database = await openDatabase('mydata.db', version: 1,
+    Database database = await openDatabase('mydata.db', version: 2,
       onCreate: (Database db, int version) async {
         // When creating the db, create the table
         await db.execute(

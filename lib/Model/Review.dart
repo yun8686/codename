@@ -9,7 +9,11 @@ class Comment{
   String comment;
   int star;
   Comment({this.comment, this.star});
-  Map toMap(){
+  Comment.fromMap(Map<String, dynamic> data){
+    this.comment = data["comment"];
+    this.star = data["star"];
+  }
+  Map<String,dynamic> toMap(){
     return {
       "comment": comment,
       "star": star,
